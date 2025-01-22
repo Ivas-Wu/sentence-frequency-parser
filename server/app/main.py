@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
 from app.FrequencyChecker import FrequencyChecker
+from app.WordCounter import WordCounter
 from dotenv import load_dotenv
 import os
 
@@ -18,15 +19,20 @@ app.add_middleware(
     allow_headers=["*"],  
 )
 
-class TextInput(BaseModel):
+class FrequencyCheckerInput(BaseModel):
     text: str
     num_sentences: int
     sb: str
     wb: str
     exceptions: str
 
+class WordCounterInput(BaseModel):
+    text: str
+    wb: str
+    breakers: str
+
 @app.post("/get-duplicates")
-def get_duplicates(input: TextInput):
+def get_duplicates(input: FrequencyCheckerInput):
     fc = FrequencyChecker()
     fc.populateWB(input.wb)
     fc.populateSB(input.sb)
@@ -36,4 +42,15 @@ def get_duplicates(input: TextInput):
     return {
         "mapping": mapping,
         "originalString": input.text
+    }
+
+@app.post("/get-wordcount")
+def get_wordcount(input: WordCounterInput):
+    fc = WordCounter()
+    fc.populateWB(input.wb)
+    fc.populateBreakers(input.breakers)
+    count, totalCount = fc.count(input.text)
+    return {
+        "count": count,
+        "totalCount": totalCount
     }

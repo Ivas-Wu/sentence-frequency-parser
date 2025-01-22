@@ -1,16 +1,14 @@
 import { useState } from 'react';
-import { getDuplicates } from '../services/api';
-import { DuplicateMapping } from '../types/api';
+import { getDuplicates, getWordCount } from '../services/api';
+import { DuplicateMapping, WordCountMapping } from '../types/api';
 import { motion } from "framer-motion";
 import { Cog6ToothIcon } from '@heroicons/react/24/outline';
 
-const ParserComponent: React.FC = () => {
+const WordCountComponent: React.FC = () => {
     const [text, setText] = useState<string>('');
-    const [numSentences, setNumSentences] = useState<number>(2);
-    const [sb, setSb] = useState<string>(". ? !");
-    const [wb, setWb] = useState<string>(", [ ] ( ) { } |");
-    const [exception, setException] = useState<string>("a, the, of");
-    const [duplicates, setDuplicates] = useState<DuplicateMapping | null>(null);
+    const [breakers, setBreakers] = useState<string>("() \"\"");
+    const [wb, setWb] = useState<string>(",");
+    const [wordCount, setWordCount] = useState<WordCountMapping | null>(null);
     const [loading, setLoading] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
     const [isOpen, setIsOpen] = useState(false);
@@ -19,11 +17,11 @@ const ParserComponent: React.FC = () => {
     const handleSubmit = async () => {
         setLoading(true);
         setError(null);
-        setDuplicates(null);
+        setWordCount(null);
 
         try {
-            const data = await getDuplicates(text, numSentences, sb, wb, exception);
-            setDuplicates(data);
+            const data = await getWordCount(text, wb, breakers);
+            setWordCount(data);
         } catch (err) {
             setError('Failed to fetch data from the server.');
         } finally {
@@ -31,31 +29,9 @@ const ParserComponent: React.FC = () => {
         }
     };
 
-    const renderTextWithHighlights = (duplicates: DuplicateMapping) => {
-        let highlightedText = [];
-        let count = 0;
-
-        for (let i = 0; i < duplicates.originalString.length; i++) {
-            const char = duplicates.originalString[i];
-            count += duplicates.mapping[i];
-
-            if (count > 0) {
-                highlightedText.push(
-                    <span key={i} className="bg-yellow-300">{char}</span>
-                );
-            } else {
-                highlightedText.push(
-                    <span key={i}>{char}</span>
-                );
-            }
-        }
-
-        return <>{highlightedText}</>;
-    };
-
     return (
         <div className="p-6 max-w-6xl mx-auto">
-            <h1 className="text-3xl font-semibold text-center mb-4">Frequency Checker</h1>
+            <h1 className="text-3xl font-semibold text-center mb-4">Word Counter</h1>
             <div className='flex flex row h-96'>
                 <motion.div
                     initial={{ width: "0px", height: "auto", opacity: 0 }}
@@ -91,22 +67,12 @@ const ParserComponent: React.FC = () => {
                 >
                     <div className="p-4">
                         <div className="mb-4">
-                            <label className="block text-sm font-medium">Number of Sentences:</label>
-                            <input
-                                type="number"
-                                value={numSentences}
-                                onChange={(e) => setNumSentences(Number(e.target.value))}
-                                min={1}
-                                className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
-                            />
-                        </div>
-                        <div className="mb-4">
-                            <label className="block text-sm font-medium">Sentence ending characters:</label>
+                            <label className="block text-sm font-medium">Breakers:</label>
                             <input
                                 type="string"
-                                value={sb}
-                                onChange={(e) => setSb(e.target.value)}
-                                placeholder="Chars that notate the end of a sentence..."
+                                value={breakers}
+                                onChange={(e) => setBreakers(e.target.value)}
+                                min={1}
                                 className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
                             />
                         </div>
@@ -120,21 +86,10 @@ const ParserComponent: React.FC = () => {
                                 className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
                             />
                         </div>
-                        <div className="mb-4">
-                            <label className="block text-sm font-medium">Words to ignore:</label>
-                            <input
-                                type="string"
-                                value={exception}
-                                onChange={(e) => setException(e.target.value)}
-                                placeholder="Words to ignore..."
-                                className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
-                            />
-                        </div>
                     </div>
                 </motion.div>
             </div>
             <div className="flex items-end">
-                {/* Cog Icon Button */}
                 <button
                     onClick={() => setIsOpen(!isOpen)}
                     className={`px-4 py-2 ${isOpen ? "bg-gray-300 text-gray-600 rounded-md hover:bg-gray-400" : "bg-gray-600 text-gray-200 rounded-md hover:bg-gray-700"}  flex-shrink-0`}
@@ -149,7 +104,7 @@ const ParserComponent: React.FC = () => {
                     disabled={loading}
                     className="flex-grow py-2 bg-blue-600 text-white font-bold rounded-md hover:bg-blue-700 focus:outline-none"
                 >
-                    {loading ? "Processing..." : "Get Duplicates"}
+                    {loading ? "Processing..." : "Get Word Count"}
                 </button>
             </div>
 
@@ -157,10 +112,11 @@ const ParserComponent: React.FC = () => {
 
             {error && <p className="text-red-600 mt-4">{error}</p>}
 
-            {duplicates && (
+            {wordCount && (
                 <div className="mt-6">
                     <div className="text-lg leading-relaxed">
-                        {renderTextWithHighlights(duplicates)}
+                        Total Word Count: {wordCount.totalCount} <br />
+                        W/O Breaker Text: {wordCount.count} 
                     </div>
                 </div>
             )}
@@ -168,4 +124,4 @@ const ParserComponent: React.FC = () => {
     );
 };
 
-export default ParserComponent;
+export default WordCountComponent;

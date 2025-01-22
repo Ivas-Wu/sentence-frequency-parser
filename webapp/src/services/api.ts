@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { DuplicateMapping } from '../types/api';
+import { DuplicateMapping, WordCountMapping } from '../types/api';
 
 const API_BASE_URL = process.env.REACT_APP_API_URL;
 
@@ -16,6 +16,19 @@ export const getDuplicates = async (
         sb: sb,
         wb: wb,
         exceptions: exceptions,
+    });
+    return response.data;
+};
+
+export const getWordCount= async (
+    text: string,
+    wb: string,
+    breakers: string,
+): Promise<WordCountMapping> => {
+    const response = await axios.post<WordCountMapping>(`${API_BASE_URL}/get-wordcount`, {
+        text,
+        wb: wb,
+        breakers: breakers,
     });
     return response.data;
 };
