@@ -11,8 +11,8 @@
     "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true,             // Allows importing JSON files as modules
     "noImplicitAny": true,                 // Disallows 'any' type by default
-    "noUnusedLocals": true,                // Disallows unused local variables
-    "noUnusedParameters": true,            // Disallows unused function parameters
+    "noUnusedLocals": false,                // Disallows unused local variables
+    "noUnusedParameters": false,            // Disallows unused function parameters
     "noImplicitThis": true,                // Disallows using 'this' in ways that would be unsafe
     "allowJs": true,                       // Allows JavaScript files (optional)
     "skipDefaultLibCheck": true,           // Skips checking default lib files (optional)

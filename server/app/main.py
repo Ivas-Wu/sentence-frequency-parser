@@ -18,14 +18,19 @@ app.add_middleware(
     allow_headers=["*"],  
 )
 
-fc = FrequencyChecker()
-
 class TextInput(BaseModel):
     text: str
     num_sentences: int
+    sb: str
+    wb: str
+    exceptions: str
 
 @app.post("/get-duplicates")
 def get_duplicates(input: TextInput):
+    fc = FrequencyChecker()
+    fc.populateWB(input.wb)
+    fc.populateSB(input.sb)
+    fc.populateExceptions(input.exceptions)
     parsed = fc.parse(input.text)
     mapping = fc.getDuplicates(parsed, input.num_sentences)
     return {

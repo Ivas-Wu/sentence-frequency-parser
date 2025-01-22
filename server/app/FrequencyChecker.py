@@ -6,9 +6,6 @@ class FrequencyChecker:
         self.wb = set()
         self.sb = set()
         self.exceptions = set()
-        self.populateExceptions("a, the, of")
-        self.populateWB(", [ ] ( ) { } |")
-        self.populateSB(". ? !")
         self.map = []
         self.index = 1
         
