@@ -2,13 +2,13 @@ from fastapi import FastAPI
 from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
 from app.FrequencyChecker import FrequencyChecker
+from dotenv import load_dotenv
+import os
 
 app = FastAPI()
+load_dotenv()
 
-origins = [
-    "http://localhost:3000",  # Frontend React app running locally (adjust this if needed)
-    "http://127.0.0.1:3000",  # If you use a different domain or port for local development
-]
+origins = os.getenv("CORS_ORIGINS", "").split(",")  # Default to empty if not found
 
 app.add_middleware(
     CORSMiddleware,

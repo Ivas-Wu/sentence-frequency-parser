@@ -12,6 +12,7 @@ server/*.sqlite3
 server/*.log
 server/*.pot
 server/*.mo
+server/.env
 
 # React-related ignores (for the webapp)
 webapp/node_modules/
