@@ -1,0 +1,42 @@
+# Python-related ignores (for the server)
+server/*.pyc
+server/*.pyo
+server/*.pyd
+server/__pycache__/
+server/env/
+server/venv/
+server/ENV/
+server/VENV/
+server/*.db
+server/*.sqlite3
+server/*.log
+server/*.pot
+server/*.mo
+
+# React-related ignores (for the webapp)
+webapp/node_modules/
+webapp/build/
+webapp/dist/
+webapp/.cache/
+webapp/*.log
+webapp/npm-debug.log
+webapp/yarn-error.log
+webapp/package-lock.json
+webapp/yarn.lock
+
+# macOS-related ignores (optional)
+.DS_Store
+
+# IDE/editor-related ignores (optional)
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Operating system-related ignores
+Thumbs.db
+ehthumbs.db
+
+# Other
+*.bak
+*.swp
