@@ -44,6 +44,9 @@ class FrequencyChecker:
                     res.append([temp, i - len(temp), i - 1])
                     temp = ""
             elif paragraph[i] in self.sb:
+                if temp:
+                    res.append([temp, i - len(temp), i - 1])
+                    temp = ""
                 res.append(".")
             else:
                 temp += paragraph[i].upper()
