@@ -72,7 +72,7 @@ const ParserComponent: React.FC = () => {
                         value={text}
                         onChange={(e) => setText(e.target.value)}
                         placeholder="Enter your paragraph here..."
-                        rows={12}
+                        rows={14}
                         className="w-full mb-4 p-2 mr-4 border border-gray-300 rounded-md"
                     />
                 </motion.div>
@@ -137,11 +137,10 @@ const ParserComponent: React.FC = () => {
                 {/* Cog Icon Button */}
                 <button
                     onClick={() => setIsOpen(!isOpen)}
-                    className="px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700 flex-shrink-0"
+                    className={`px-4 py-2 ${isOpen ? "bg-gray-300 text-gray-600 rounded-md hover:bg-gray-400" : "bg-gray-600 text-gray-200 rounded-md hover:bg-gray-700"}  flex-shrink-0`}
                 >
                     <Cog6ToothIcon
-                        className={`w-6 h-6 transition-transform duration-300 ${isOpen ? "rotate-180" : "rotate-0"
-                            }`}
+                        className={`w-6 h-6 transition-transform duration-300 ${isOpen ? "rotate-180" : "rotate-0"}`}
                     />
                 </button>
 
